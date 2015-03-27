@@ -174,10 +174,10 @@
             [self.writer addInput:self.audioInput];
         }
     }
-    
+
     [self.writer startWriting];
     [self.reader startReading];
-    [self.writer startSessionAtSourceTime:CMTimeMake(0, ((AVAssetTrack *)videoTracks[0]).naturalTimeScale)];
+    [self.writer startSessionAtSourceTime: self.timeRange.start];
 
     self.inputQueue = dispatch_queue_create("VideoEncoderInputQueue", DISPATCH_QUEUE_SERIAL);
     __block BOOL videoCompleted = NO;
@@ -197,7 +197,7 @@
             }
         }
     }];
-    
+
     if (!self.audioOutput) {
         audioCompleted = YES;
     } else {
