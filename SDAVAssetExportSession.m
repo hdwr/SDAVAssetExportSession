@@ -91,7 +91,15 @@
     self.writer.metadata = self.metadata;
 
     NSArray *videoTracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];
-
+    CGSize renderSize;
+    if (self.videoComposition)
+    {
+        renderSize = self.videoComposition.renderSize;
+    }
+    else if (videoTracks.count)
+    {
+        renderSize = ((AVAssetTrack *)videoTracks[0]).naturalSize;
+    }
 
     if (CMTIME_IS_VALID(self.timeRange.duration) && !CMTIME_IS_POSITIVE_INFINITY(self.timeRange.duration))
     {
@@ -132,8 +140,8 @@
         NSDictionary *pixelBufferAttributes = @
         {
             (id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
-            (id)kCVPixelBufferWidthKey: @(self.videoOutput.videoComposition.renderSize.width),
-            (id)kCVPixelBufferHeightKey: @(self.videoOutput.videoComposition.renderSize.height),
+            (id)kCVPixelBufferWidthKey: @(renderSize.width),
+            (id)kCVPixelBufferHeightKey: @(renderSize.height),
             @"IOSurfaceOpenGLESTextureCompatibility": @YES,
             @"IOSurfaceOpenGLESFBOCompatibility": @YES,
         };
